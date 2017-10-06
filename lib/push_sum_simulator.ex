@@ -34,8 +34,8 @@ defmodule Push_Sum_Simulator do
 
                     push_sum(s, w, neighbors_pid_list)
                 end
-            after 1000 ->
-                #IO.puts "No msg in mailbox for " <> inspect(self()) <> " after 1s"
+            after 100 ->
+                #IO.puts "No msg in mailbox for " <> inspect(self()) <> " after 100ms"
         end
 
         if three_rounds_ratio_list != nil && (length three_rounds_ratio_list) ==  4 do
@@ -44,8 +44,6 @@ defmodule Push_Sum_Simulator do
                     abs((Enum.at(three_rounds_ratio_list, 2) - Enum.at(three_rounds_ratio_list, 1))) <= 0.0000000001 &&
                     abs((Enum.at(three_rounds_ratio_list, 3) - Enum.at(three_rounds_ratio_list, 2))) <= 0.0000000001 do
                     is_done = true
-                    #IO.puts inspect(self()) <> " completed"
-                    #IO.puts inspect(three_rounds_ratio_list)
                     send main_listener_pid, { :response, "done" }
                 end
             else
@@ -61,7 +59,6 @@ defmodule Push_Sum_Simulator do
         if neighbors_pid_list != nil do
             random_pid = :rand.uniform(length neighbors_pid_list) - 1
             pid_to_gossip = Enum.at(neighbors_pid_list, random_pid)
-            #IO.puts(inspect(self()) <> "------>" <> inspect(pid_to_gossip))
             send pid_to_gossip, { :response, [] ++ [s] ++ [w]}
         end
     end

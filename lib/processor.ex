@@ -1,7 +1,10 @@
 defmodule Processor do
          
-    def listen(no_of_nodes_completed, num_of_nodes, start_time) do
+    def listen(no_of_nodes_completed, num_of_nodes, start_time, pid) do
         receive do
+            {:listen_start_time, start_response} -> 
+                start_time = :os.system_time(:millisecond)
+
             {:response, response} -> 
                 no_of_nodes_completed = no_of_nodes_completed + 1
         end
@@ -10,9 +13,9 @@ defmodule Processor do
         if no_of_nodes_completed >= num_of_nodes do
             total_time_taken = (:os.system_time(:millisecond) - start_time)
             IO.puts "Total time taken in ms : #{total_time_taken}"
-            no_of_nodes_completed
+            send pid, {:response, ""}
         else
-            listen(no_of_nodes_completed, num_of_nodes, start_time)
+            listen(no_of_nodes_completed, num_of_nodes, start_time, pid)
         end
     end
 
@@ -21,7 +24,8 @@ defmodule Processor do
             pid_list_for_gossip
         else
             pid_list_for_gossip = 
-                pid_list_for_gossip ++ [spawn(Gossip_Simulator, :listen, [main_listener_pid, 0, nil, false])]
+                pid_list_for_gossip ++ 
+                [spawn(Gossip_Simulator, :listen, [main_listener_pid, 0, nil, false, -1])]
             get_pid_list_for_gossip(num_of_nodes - 1, pid_list_for_gossip, main_listener_pid)
         end
     end
@@ -37,14 +41,23 @@ defmodule Processor do
         end
     end
 
-    def start_gossip(pid_neighbors_list_map) do
+    def start_gossip(pid_neighbors_list_map, main_pid) do
+        send main_pid, { :listen_start_time, "" }
+
         Enum.each pid_neighbors_list_map,  fn {k, v} ->
             send k, { :main_response, v }
         end
+
+        keys = Map.keys(pid_neighbors_list_map)
+        key = Enum.at(keys, 0)
+        send key, { :main_gossip_kickstart, "dummy_string" }
+        
     end
 
-    def start_push_sum(pid_neighbors_list_map) do
+    def start_push_sum(pid_neighbors_list_map, main_pid) do
         
+        send main_pid, { :listen_start_time, "" }
+
         Enum.each pid_neighbors_list_map,  fn {k, v} ->
             send k, { :main_response, v }
         end
@@ -52,6 +65,7 @@ defmodule Processor do
         keys = Map.keys(pid_neighbors_list_map)
         key = Enum.at(keys, 0)
         send key, { :main_push_sum_kickstart, "dummy_string" }
+        
     end
 
     def get_neighbors_for_full_topology(map, list, count) do
@@ -118,26 +132,19 @@ defmodule Processor do
             complete_neighbour = 
                 if !imperfect do
                     row_level_neighbours ++ column_leve_neighbours
-                #Map.put(map,val,row_level_neighbours ++ column_leve_neighbours)
+                
                 else
                     complete_neighbour = row_level_neighbours ++ column_leve_neighbours
-                    random_neighbour = get_random_neighbour(pid_list,complete_neighbour)
+                    random_neighbour = get_random_neighbour(index, pid_list,complete_neighbour)
                     complete_neighbour ++ random_neighbour
-                #Map.put(map,val,complete_neighbour ++ random_neighbour)
+                
                 end
 
         complete_neighbour
     end 
 
-    def get_random_neighbour(list,complete_neighbour) do
-        Enum.take_random(list -- complete_neighbour,1)
-    end
-
-    def clean_pid_list_for_2D_topology(pid_list) do
-        length = length(pid_list)
-        size = round(:math.sqrt(length))
-        # Drop records to make the list perfect 2D
-        list = Enum.drop(pid_list,-(length- (size*size)))
+    def get_random_neighbour(index, list, complete_neighbour) do
+        Enum.take_random(list -- ([] ++ complete_neighbour ++ [Enum.at(list, index)]), 1)
     end
 
     def create_topology(topology, pid_list) do
@@ -180,28 +187,23 @@ defmodule Processor do
                 IO.puts "num_of_nodes rounded to " <> to_string num_of_nodes
             end
 
+            main_pid = spawn(Processor, :listen, [0, num_of_nodes, :os.system_time(:millisecond), self()])
+
             case algorithm do
                 "gossip" ->
-                    pid_list_for_gossip = get_pid_list_for_gossip(num_of_nodes, [], self())
+                    pid_list_for_gossip = get_pid_list_for_gossip(num_of_nodes, [], main_pid)
                     pid_neighbors_list_map = create_topology(topology, pid_list_for_gossip)
-
-                    for {k,v} <- pid_neighbors_list_map do
-                        IO.puts(inspect(k) <> " -> " <> inspect(v))
-                    end
-
-                    start_gossip(pid_neighbors_list_map)
+                    start_gossip(pid_neighbors_list_map, main_pid)
                 "push-sum" ->
-                    pid_list_for_push_sum = get_pid_list_for_push_sum(num_of_nodes, [], self(), 1)
+                    pid_list_for_push_sum = get_pid_list_for_push_sum(num_of_nodes, [], main_pid, 1)
                     pid_neighbors_list_map = create_topology(topology, pid_list_for_push_sum)
-
-                    for {k,v} <- pid_list_for_push_sum do
-                        IO.puts(inspect(k) <> " -> " <> inspect(v))
-                    end
-
-                    start_push_sum(pid_neighbors_list_map)
+                    start_push_sum(pid_neighbors_list_map, main_pid)
             end
-
-            listen(0, num_of_nodes, :os.system_time(:millisecond))
+            
+            receive do
+                {:response, response} -> 
+            end
+            
         end
     end
 
