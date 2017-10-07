@@ -21,6 +21,13 @@ defmodule Gossip_Simulator do
             send main_listener_pid, { :response, "done" }
             listen(main_listener_pid, no_of_times_message_received, neighbors_pid_list, is_done, arbitrary_pid) 
         else
+            if is_done do
+                # sends message after 1s to random neighbor
+                :timer.sleep(1000)
+                random_pid = :rand.uniform(length neighbors_pid_list) - 1
+                pid_to_gossip = Enum.at(neighbors_pid_list, random_pid)
+                send pid_to_gossip, { :response, ""}    
+            end
             if no_of_times_message_received > 0 do
                 gossip(neighbors_pid_list, no_of_times_message_received)
             end
