@@ -75,7 +75,7 @@ The actual network topology plays a critical role in the dissemination speed of 
 Observation made was over average of 3 runs of each permutations.
 1. Both algorithm fails to achieve the termination condition depending upon the termination of it's neighbour in the topology. i.e. For example Consider line topology having setup like PID-1 <-> PID-2 <-> PID-3 and PID-1 and PID-3 reach termination condition then PID-2 will become dangled process hence the entire process will never reach termination.
 2. If we increase the number of rumors sent by any process in each step then their is relative decrease in convergence time(~15% on average with 3 rumors in each step).
-3. Maximum number of workers with correct stimulation :
+3. Maximum number of workers with correct simulation :
 <img src="resource/Max_Number_Worker.png">
 
 
