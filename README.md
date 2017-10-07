@@ -76,18 +76,8 @@ Observation made was over average of 3 runs of each permutations.
 1. Both algorithm fails to achieve the termination condition depending upon the termination of it's neighbour in the topology. i.e. For example Consider line topology having setup like PID-1 <-> PID-2 <-> PID-3 and PID-1 and PID-3 reach termination condition then PID-2 will become dangled process hence the entire process will never reach termination.
 2. If we increase the number of rumors sent by any process in each step then their is relative decrease in convergence time(~15% on average with 3 rumors in each step).
 3. Maximum number of workers with correct stimulation :
+<img src="resource/Max_Number_Worker.png">
 
-
-| Algorithm | Topology | Num of Worker |
-| :-------: | :------: | :-----------: |
-| gossip    | full     | 40000          |
-| gossip    | line     | 20000          |
-| gossip    | 2D       | 30000          |
-| gossip    | imp2D    | 30000          |
-| push-sum  | full     | 35000          |
-| push-sum  | line     | 18000          |
-| push-sum  | 2D       | 25000          |
-| push-sum  | imp2D    | 30000          |
 
 
 
