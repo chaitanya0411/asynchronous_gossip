@@ -7,17 +7,18 @@
 | Govind Rajan Chandra | 26113109 | cgovindrajan@ufl.edu     |
 | Chaitanya Kulkarni   | 19160119 | chaitanyaakulkar@ufl.edu |
 
-# Project Defination
+# Project Definition
 
-- Goal of the project is to implement gossip protocol using simple gossip and push sum algorithm using various topology.
-- Topologies implement are : 
+- Goal of the project is to implement using simple gossip and push sum algorithms and observe its behavior for various network topologies.
+
+- Topologies observed are : 
   1. Full Topology
   2. Line Topology
   3. 2D Topology
-  4. Imperferct Topolgy
+  4. Imperferct 2D Topolgy
 
-- Algorithm implemented are :
-  1. Gossip Simulator
+- Algorithms implemented are :
+  1. Simple Gossip
   2. Push-Sum Algorithm
 
 # Execution Steps
@@ -46,14 +47,14 @@ The code requires two arguments:
 ### Gossip Algorithm for information propagation ###
 
 The Gossip algorithm involves the following:
-* **Starting**: A participant(actor) it told/sent a roumor(fact) by the main process
+* **Starting**: A participant(actor) it told/sent a rumour(fact) by the main process
 * **Step**: Each actor selects a random neighboor and tells it the roumor 
 * **Termination**: Each actor keeps track of rumors and how many times it has heard the rumor. It stops transmitting once it has heard the roumor 10 times (10 is arbitrary, any value can be configured).
 
 ### Push-Sum algorithm for sum computation ###
 
 * **State**: Each actor maintains two quantities: s and w. Initially, s = i (that is actor number i has value i) and w = 1
-* **Starting**: Ask one of the actors to start from the main process.
+* **Starting**: One of the actors starts after receiving message from the main process.
 * **Receive**: Messages sent and received are pairs of the form (s, w). Upon receive, an actor adds received pair to its own corresponding values. Upon receive, each actor selects a random neighboor and sends it a message.
 * **Send**: When sending a message to another actor, half of s and w is kept by the sending actor and half is placed in the message.
 * **Sum estimate**: At any given moment of time, the sum estimate is s/w where s and w are the current values of an actor.
