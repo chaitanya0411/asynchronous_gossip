@@ -1,21 +1,43 @@
-# Project2
+# Project2 : GOSSIP SIMULATOR
 
-**TODO: Add description**
+**Group members**
 
-## Installation
+| Name                 | UFID     | Email ID                 |
+| :------------------: | :------: | :----------------------: |
+| Govind Rajan Chandra | 26113109 | cgovindrajan@ufl.edu     |
+| Chaitanya Kulkarni   | 19160119 | chaitanyaakulkar@ufl.edu |
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `project2` to your list of dependencies in `mix.exs`:
+# Project Defination
 
-```elixir
-def deps do
-  [
-    {:project2, "~> 0.1.0"}
-  ]
-end
+- Goal of the project is to implement gossip protocol using simple gossip and push sum algorithm using various topology.
+- Topologies implement are : 
+  1. Full Topology
+  2. Line Topology
+  3. 2D Topology
+  4. Imperferct Topolgy
+
+- Algorithm implemented are :
+  1. Gossip Simulator
+  2. Push-Sum Algorithm
+
+# Execution Steps
+
+> Compile
+
 ```
+mix clean
+mix escript.build
+```
+ 
+> Initialize server and start mining 
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/project2](https://hexdocs.pm/project2).
+``` 
+./project2 <Number Of Nodes> <Topology Type> <Algorithm>
+```
+  
+
+# Implementation Details
+
+
+
 
