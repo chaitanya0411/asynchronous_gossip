@@ -39,5 +39,10 @@ mix escript.build
 # Implementation Details
 
 
+# Key Observations
+
+
+
+
 
 
