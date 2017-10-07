@@ -87,6 +87,13 @@ Here are some Graphs describing the performance achieved with our code.
 <img src="resource/Chart_Gossip.png" width="425" height="300">
 <img src="resource/Chart_Push-Sum.png" width="425" height="300">
 
+Exection for Gossip :
+
+<img src="resource/Screen_shot_full_gossip.png" width="425" height="300"><img src="resource/Screen_shot_line_gossip.png" width="425" height="300">
+<img src="resource/Screen_shot_2D_gossip.png" width="425" height="300">
+<img src="resource/Screen_shot_imp2D_gossip.png" width="425" height="300">
+
+
 
 
 
