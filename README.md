@@ -41,6 +41,10 @@ mix escript.build
 
 # Key Observations
 
+# Performance 
+Here are some Graphs describing the performance achieved with our code.
+<img src="resource/Chart_Gossip.png" width="425" height="300">
+<img src="resource/Chart_Push-Sum.png" width="425" height="300">
 
 
 
